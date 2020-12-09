@@ -186,6 +186,7 @@ static bool _isUnityLoaded = false;
         id app = [UIApplication sharedApplication];
         id appController = [[self ufw] appController];
         [appController applicationWillResignActive: app];
+        [appController applicationDidEnterBackground: app];
         _isUnityPaused = true;
     }
 }

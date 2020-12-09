@@ -93,6 +93,7 @@ NSMutableArray * gFuwViews;
 
 - (void)initView {
     _uView = [[FLTUnityView alloc] init];
+    
     if ([unityUtils unityIsInitialized]) {
         [_uView setUnityView: (UIView*)[GetAppController() unityView]];
     } else {
@@ -101,22 +102,23 @@ NSMutableArray * gFuwViews;
             [_uView setUfw:unityUtils.ufw];
             [_channel invokeMethod:@"events#onUnityCreated" arguments:nil];
         }];
-        [GetAppController() setUnityMessageHandler: ^(const char* message)
-        {
-            [_channel invokeMethod:@"events#onUnityMessage" arguments:[NSString stringWithUTF8String:message]];
-        }];
-        [GetAppController() setUnitySceneLoadedHandler:^(const char *name, const int *buildIndex, const bool *isLoaded, const bool *isValid)
-        {
-            NSDictionary *addObject = @{
-                @"name" : [NSString stringWithUTF8String:name],
-                @"buildIndex" : [NSNumber numberWithInt:buildIndex],
-                @"isLoaded" : [NSNumber numberWithBool:isLoaded],
-                @"isValid" : [NSNumber numberWithBool:isValid]
-            };
-            
-            [_channel invokeMethod:@"events#onUnitySceneLoaded" arguments:addObject];
-        }];
     }
+    
+    [GetAppController() setUnityMessageHandler: ^(const char* message)
+    {
+        [_channel invokeMethod:@"events#onUnityMessage" arguments:[NSString stringWithUTF8String:message]];
+    }];
+    [GetAppController() setUnitySceneLoadedHandler:^(const char *name, const int *buildIndex, const bool *isLoaded, const bool *isValid)
+    {
+        NSDictionary *addObject = @{
+            @"name" : [NSString stringWithUTF8String:name],
+            @"buildIndex" : [NSNumber numberWithInt:buildIndex],
+            @"isLoaded" : [NSNumber numberWithBool:isLoaded],
+            @"isValid" : [NSNumber numberWithBool:isValid]
+        };
+        
+        [_channel invokeMethod:@"events#onUnitySceneLoaded" arguments:addObject];
+    }];
 }
 
 - (void)onMethodCall:(FlutterMethodCall*)call result:(FlutterResult)result {
@@ -252,8 +254,4 @@ NSMutableArray * gFuwViews;
 }
 
 @end
-
-
-
-
-
+    
